@@ -1,0 +1,29 @@
+# Per-push checks for the npm package. Publishing lives in release.yml.
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  check:
+    name: install · build · typecheck · test
+    if: vars.OSS_CI_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0
+        with:
+          node-version: 22
+      # Unlocked on purpose: no lockfile ships with the source, so the
+      # install resolves fresh.
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - name: Typecheck
+        run: |
+          set -euo pipefail
+          if jq -e '.scripts.typecheck' package.json >/dev/null; then npm run typecheck; fi
+      - name: Test
+        run: |
+          set -euo pipefail
+          if jq -e '.scripts.test' package.json >/dev/null; then npm test; fi
