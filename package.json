@@ -1,6 +1,6 @@
 {
   "name": "@mcpg-dev/pulumi-policy",
-  "version": "0.1.0-beta.13",
+  "version": "0.1.0-beta.14",
   "repository": "https://github.com/mcpg-dev/pulumi-mcpg-policy",
   "description": "Pulumi CrossGuard policy pack mirroring MCPG operator admission rules.",
   "license": "Apache-2.0",
